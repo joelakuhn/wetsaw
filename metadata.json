@@ -1,0 +1,21 @@
+{
+    "KPlugin": {
+        "Name": "Wetsaw",
+        "Description": "Untiles windows as soon as they tile",
+        "Icon": "preferences-system-windows",
+        
+        "Authors": [
+            {
+                "Email": "joelakuhn@gmail.com",
+                "Name": "Joel Kuhn"
+            }
+        ],
+        "Id": "wetsaw",
+        "Version": "1.0",
+        "License": "GPLv3",
+        "Website": "https://github.com/joelakuhn/wetsaw"
+    },
+    "X-Plasma-API": "javascript",
+    "X-Plasma-MainScript": "code/main.js",
+    "KPackageStructure": "KWin/Script"
+}
