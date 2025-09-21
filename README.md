@@ -11,3 +11,7 @@ On smaller screens, desktop applications often don't scale well to less than hal
 I often want to have one window at two-thirds over top of another window, so I can peak at information on that window without it being squeezed into an awkward layout. The current behavior of kde, where snapped windows resize each other is frustrating for this use case. If you resize a window, all future windows snapped to the other side, will only take up the remaining space.
 
 It also leaves the user without a consistent experience. The size a window snaps to is entirely dependent on the size of the last window that was resized, which may have been a one-off resize to deal with a layout issue, to see everything on one line, etc. I find it very frustrating, and even more frustrating is the fact that you can't turn it off.
+
+## Installation
+
+Clone the repository, and `./install-and-enable.sh`.

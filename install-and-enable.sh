@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+# Uninstall previous version if it exists
+if kpackagetool6 --type=KWin/Script -s wetsaw | grep -q 'wetsaw'; then
+  kpackagetool6 --type=KWin/Script -r wetsaw
+fi
+
+# Install the current version
+kpackagetool6 --type=KWin/Script -i .
+
+# Enable the script
+kwriteconfig6 --file kwinrc --group Plugins --key wetsawEnabled true
+
+# Reload KWin scripts to apply changes
+qdbus org.kde.KWin /Scripting unloadScript wetsaw
+qdbus org.kde.KWin /Scripting start > /dev/null
