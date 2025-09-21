@@ -114,7 +114,8 @@ function generate_shortcut(name, keys, direction, factors) {
             window_geometry = resize_window_geometry(window, screen_geometry, factors[1]);
         }
 
-        workspace.activeWindow.frameGeometry = window_geometry;
+        window.setMaximize(false, false);
+        window.frameGeometry = window_geometry;
     });
 }
 
