@@ -1,3 +1,8 @@
+// CONSTANTS
+
+// Defined in kwin/src/scripting/scripting.h but does not appear to be exposed to scripts
+const CLIENT_AREA_OPTION_MAXIMIZEAREA = 2;
+
 // UNTILINING
 
 function untile(win) {
@@ -56,28 +61,6 @@ function active_screen_for_window(win) {
     return active_screen;
 }
 
-function screen_active_area(screen) {
-    let geometry = {
-        x: screen.geometry.x,
-        y: screen.geometry.y,
-        width: screen.geometry.width,
-        height: screen.geometry.height,
-    };
-    
-    // Compensate for panels
-    for (let panel of active_panel_geometries(geometry)) {
-        if (panel.y === geometry.y) {
-            geometry.y += panel.y;
-            geometry.height -= panel.height;
-        }
-        else if ((panel.y + panel.height) === (geometry.y + geometry.height)) {
-            geometry.height -= panel.height;
-        }
-    }
-    
-    return geometry;
-}
-
 function geometry_equal(g1, g2) {
     return Math.abs(g1.x - g2.x) < 1
         && Math.abs(g1.y - g2.y) < 1
@@ -97,7 +80,7 @@ function resize_window_geometry(screen_geometry, factors) {
 function generate_shortcut(name, keys, factors, direction) {
     registerShortcut('Wetsaw - ' + name, 'Wetsaw - ' + name, keys, function() {
         let screen = active_screen_for_window(workspace.activeWindow);
-        let screen_geometry = screen_active_area(screen);
+        let screen_geometry = workspace.clientArea(CLIENT_AREA_OPTION_MAXIMIZEAREA, screen, workspace.currentDesktop);
         let window_geometry = resize_window_geometry(screen_geometry, factors[0]);
 
         if (geometry_equal(window_geometry, workspace.activeWindow.frameGeometry)) {
@@ -105,7 +88,7 @@ function generate_shortcut(name, keys, factors, direction) {
                 return geometry_equal(s.geometry, screen.geometry)
             });
             screen = workspace.screens[(screen_index + direction + workspace.screens.length) % workspace.screens.length];
-            screen_geometry = screen_active_area(screen);
+        let screen_geometry = workspace.clientArea(CLIENT_AREA_OPTION_MAXIMIZEAREA, screen, workspace.currentDesktop);
             window_geometry = resize_window_geometry(screen_geometry, factors[1]);
         }
 
