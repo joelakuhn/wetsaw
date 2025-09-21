@@ -68,35 +68,69 @@ function geometry_equal(g1, g2) {
         && Math.abs(g1.height - g2.height) < 1;
 }
 
-function resize_window_geometry(screen_geometry, factors) {
-    return {
-        x: Math.floor(screen_geometry.x + (factors[0] * screen_geometry.width)),
-        y: Math.floor(screen_geometry.y + (factors[1] * screen_geometry.height)),
-        width: Math.floor(screen_geometry.width * factors[2]),
-        height: Math.floor(screen_geometry.height * factors[3]),
+function resize_window_geometry(window, screen_geometry, factors) {
+    let window_geometry = {
+        x: window.frameGeometry.x,
+        y: window.frameGeometry.y,
+        width: window.frameGeometry.width,
+        height: window.frameGeometry.height,
     };
+    if ('x' in factors)
+        window_geometry.x = Math.floor(screen_geometry.x + (factors.x * screen_geometry.width));
+    if ('y' in factors)
+        window_geometry.y = Math.floor(screen_geometry.y + (factors.y * screen_geometry.height));
+    if ('width' in factors)
+        window_geometry.width = Math.floor(screen_geometry.width * factors.width);
+    if ('height' in factors)
+        window_geometry.height = Math.floor(screen_geometry.height * factors.height);
+
+    return window_geometry;
 }
 
-function generate_shortcut(name, keys, factors, direction) {
-    registerShortcut('Wetsaw - ' + name, 'Wetsaw - ' + name, keys, function() {
-        let screen = active_screen_for_window(workspace.activeWindow);
-        let screen_geometry = workspace.clientArea(CLIENT_AREA_OPTION_MAXIMIZEAREA, screen, workspace.currentDesktop);
-        let window_geometry = resize_window_geometry(screen_geometry, factors[0]);
+function next_screen(current_screen, direction) {
+    let n_screens = workspace.screens.length;
+    for (let i = 0; i < n_screens; i++) {
+        if (geometry_equal(current_screen.geometry, workspace.screens[i].geometry)) {
+            return workspace.screens[(i + direction + n_screens) % n_screens];
+        }
+    }
+    return current_screen;
+}
 
-        if (geometry_equal(window_geometry, workspace.activeWindow.frameGeometry)) {
-            let screen_index = workspace.screens.findIndex((s) => {
-                return geometry_equal(s.geometry, screen.geometry)
-            });
-            screen = workspace.screens[(screen_index + direction + workspace.screens.length) % workspace.screens.length];
-        let screen_geometry = workspace.clientArea(CLIENT_AREA_OPTION_MAXIMIZEAREA, screen, workspace.currentDesktop);
-            window_geometry = resize_window_geometry(screen_geometry, factors[1]);
+function clientArea(screen) {
+    return workspace.clientArea(CLIENT_AREA_OPTION_MAXIMIZEAREA, screen, workspace.currentDesktop);
+}
+
+function generate_shortcut(name, keys, direction, factors) {
+    registerShortcut('Wetsaw - ' + name, 'Wetsaw - ' + name, keys, function() {
+        let window = workspace.activeWindow;
+        let screen = active_screen_for_window(window);
+        let screen_geometry = clientArea(screen);
+        let window_geometry = resize_window_geometry(window, screen_geometry, factors[0]);
+
+        if (geometry_equal(window_geometry, window.frameGeometry)) {
+            screen = next_screen(screen, direction);
+            let screen_geometry = clientArea(screen);
+            window_geometry = resize_window_geometry(window, screen_geometry, factors[1]);
         }
 
         workspace.activeWindow.frameGeometry = window_geometry;
     });
 }
 
-generate_shortcut('Left Half', '', [ [ 0, 0, .5, 1 ], [ .5, 0, .5, 1 ] ], -1);
-generate_shortcut('Right Half', '', [ [ .5, 0, .5, 1 ], [ 0, 0, .5, 1 ] ], 1);
-generate_shortcut('Left Two-Thirds', '', [ [ 0, 0, .66666, 1 ], [ .33333, 0, .66666, 1 ] ], -1);
-generate_shortcut('Right Two-Thirds', '', [ [ .33333, 0, .66666, 1 ], [ 0, 0, .66666, 1 ] ], 1);
+generate_shortcut('Left Half', '', -1, [
+    { x: 0,      y: 0,      width: .5,     height: 1 },
+    { x: .5,     y: 0,      width: .5,     height: 1 },
+]);
+generate_shortcut('Right Half', '', 1, [
+    { x: .5,     y: 0,      width: .5,     height: 1 },
+    { x: 0,      y: 0,      width: .5,     height: 1 },
+]);
+generate_shortcut('Left Two-Thirds', '', -1, [
+    { x: 0,      y: 0,      width: .66666, height: 1 },
+    { x: .33333, y: 0,      width: .66666, height: 1 },
+]);
+generate_shortcut('Right Two-Thirds', '', 1, [
+    { x: .33333, y: 0,      width: .66666, height: 1 },
+    { x: 0,      y: 0,      width: .66666, height: 1 },
+]);
