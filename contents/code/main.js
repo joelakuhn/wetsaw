@@ -108,7 +108,7 @@ function generate_shortcut(name, keys, direction, factors) {
         let screen_geometry = clientArea(screen);
         let window_geometry = resize_window_geometry(window, screen_geometry, factors[0]);
 
-        if (geometry_equal(window_geometry, window.frameGeometry)) {
+        if (direction !== 0 && geometry_equal(window_geometry, window.frameGeometry)) {
             screen = next_screen(screen, direction);
             let screen_geometry = clientArea(screen);
             window_geometry = resize_window_geometry(window, screen_geometry, factors[1]);
@@ -133,4 +133,7 @@ generate_shortcut('Left Two-Thirds', '', -1, [
 generate_shortcut('Right Two-Thirds', '', 1, [
     { x: .33333, y: 0,      width: .66666, height: 1 },
     { x: 0,      y: 0,      width: .66666, height: 1 },
+]);
+generate_shortcut('Fill Vertically', '', 0, [
+    {            y: 0,                     height: 1 },
 ]);
