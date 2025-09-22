@@ -12,5 +12,13 @@ kpackagetool6 --type=KWin/Script -i .
 kwriteconfig6 --file kwinrc --group Plugins --key wetsawEnabled true
 
 # Reload KWin scripts to apply changes
-qdbus org.kde.KWin /Scripting unloadScript wetsaw
-qdbus org.kde.KWin /Scripting start > /dev/null
+if which qdbus &> /dev/null; then
+  qdbus org.kde.KWin /Scripting unloadScript wetsaw > /dev/null
+  qdbus org.kde.KWin /Scripting start > /dev/null
+else
+  echo '!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!';
+  echo '!! qdbus is required for reloading KWin scripts.       !!';
+  echo '!! Please disable/re-enable wetsaw in:                 !!';
+  echo '!! System Settings > Window Management > KWin Scripts. !!';
+  echo '!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!';
+fi
