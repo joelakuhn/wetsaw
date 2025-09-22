@@ -134,6 +134,14 @@ Snapper.generate_shortcut('Right Two-Thirds', 1, [
     { x: .33333, y: 0,      width: .66666, height: 1 },
     { x: 0,      y: 0,      width: .66666, height: 1 },
 ]);
+Snapper.generate_shortcut('Left Three-Quarters', -1, [
+    { x: 0,      y: 0,      width: .75,     height: 1 },
+    { x: .25,    y: 0,      width: .75,     height: 1 },
+]);
+Snapper.generate_shortcut('Right Three-Quarters', 1, [
+    { x: .25,    y: 0,      width: .75,     height: 1 },
+    { x: 0,      y: 0,      width: .75,     height: 1 },
+]);
 Snapper.generate_shortcut('Fill Vertically', 0, [
-    {            y: 0,                     height: 1 },
+    {            y: 0,                      height: 1 },
 ]);
