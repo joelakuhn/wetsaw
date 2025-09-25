@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Uninstall previous version if it exists
-if kpackagetool6 --type=KWin/Script -s wetsaw | grep -q 'wetsaw'; then
+if kpackagetool6 --type=KWin/Script -s wetsaw 2> /dev/null | grep -q 'wetsaw'; then
   kpackagetool6 --type=KWin/Script -r wetsaw
 fi
 
