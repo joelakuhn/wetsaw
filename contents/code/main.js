@@ -1,5 +1,10 @@
-// Defined in kwin/src/scripting/scripting.h but does not appear to be exposed to scripts
+// These enums do not appear to be exposed to scripts.
+
+// Defined in kwin/src/scripting/scripting.h
 const CLIENT_AREA_OPTION_MAXIMIZEAREA = 2;
+
+// Defined in kwin/src/effect/globals.h
+const WINDOW_TYPE_NORMAL = 0;
 
 class Untiler {
     static untile(win) {
@@ -16,6 +21,7 @@ class Untiler {
     }
 
     static bind(win) {
+        if (win.windowType !== WINDOW_TYPE_NORMAL) return;
         win.tileChanged.connect(function() {
             Untiler.untile(win);
         });
@@ -111,6 +117,7 @@ class Snapper {
 
     static generate_shortcut(name, direction, factors) {
         registerShortcut('Wetsaw - ' + name, 'Wetsaw - ' + name, '', function() {
+            if (workspace.activeWindow.windowType !== WINDOW_TYPE_NORMAL) return;
             Snapper.snap(workspace.activeWindow, direction, factors);
         });
     }
